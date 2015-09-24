@@ -38,4 +38,16 @@ class MethodsConstantsController extends BaseController{
         return Redirect::to('operators_list');
     }
     
+    public function towns_list()
+    {
+        return Town::All();
+    }
+    
+    public function states_list()
+    {
+        $states = array();
+        $states['states'] = State::All();
+        return $states;
+    }    
+    
 }

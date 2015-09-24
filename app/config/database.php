@@ -55,7 +55,7 @@ return array(
 		'mysql' => array(
 			'driver'    => 'mysql',
 			'host'      => 'localhost',
-			'database'  => 'prueba',
+			'database'  => 'car_service',
 			'username'  => 'root',
 			'password'  => 'root',
 			'charset'   => 'utf8',

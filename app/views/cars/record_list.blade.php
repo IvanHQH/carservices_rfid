@@ -161,11 +161,14 @@
                                 <td style="text-align: center; vertical-align: middle; ">
                                     <span class="car-id" style="display:none">
                                         {{$car->id}}
-                                    </span>                                          
-                                <button type="button" class="btn btn-default btn-order">O</button>                 
-                                <button type="button" class="btn btn-primary btn-diagnostic">D</button>
-                                <button type="button" class="btn btn-success btn-quote">C</button>
-                                <button type="button" class="btn btn-warning btn-s">S</button>                                              
+                                    </span>                    
+                                <!---
+                                $car->type_btn_ (btn-default,btn-primary,btn-success,btn-warning)
+                                -->    
+                                <button type="button" class="btn {{$car->type_btn_o}} btn-order">O</button>                 
+                                <button type="button" class="btn {{$car->type_btn_d}} btn-diagnostic">D</button>
+                                <button type="button" class="btn {{$car->type_btn_c}} btn-quote">C</button>
+                                <button type="button" class="btn {{$car->type_btn_c}} btn-s">S</button>                                              
                                 </td>                                
                             </tr>  
                         @endforeach   
@@ -320,7 +323,8 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 <h4 class="modal-title" id="header_modal">Cotización</h4>
             </div>
-            <div class="modal-body">                                        
+            <div class="modal-body">   
+                <div id="quote_id" style="display:none"></div>
                 <div class="form-group">
                     <label>Fecha  :&nbsp;&nbsp;&nbsp;</label>
                     <label id='quote_date' class="text-success">29 - Mayo - 2015</label>
@@ -338,21 +342,55 @@
                             <th>Cant.</th>
                             <th>Decripción</th>
                             <th>Subtotal</th>
+                            <th></th>                            
                         </tr>
                     </thead>     
                     <tbody id="tbl-body">
                         <tr>      
                           <td>1</td>
                           <td>desc</td>
-                          <td>$300.00</td></tr>
+                          <td>$300.00</td>
+                          <td>
+                            <span class="quote-detail-id" style="display:none">
+                                5
+                            </span>                                
+                            <a class ="delete_quote_detail"
+                               title="Eliminar" style="cursor:pointer">
+                                <i class="glyphicon glyphicon-remove">                                    
+                                </i>
+                            </a>                                    
+                          </td>
+                        </tr>
                         <tr>      
                           <td>1</td>
                           <td>desc</td>
-                          <td>$300.00</td></tr>
+                          <td>$300.00</td>
+                          <td>
+                            <span class="quote-detail-id" style="display:none">
+                                4
+                            </span>                                
+                            <a class ="delete_quote_detail" 
+                               title="Eliminar" style="cursor:pointer">
+                                <i class="glyphicon glyphicon-remove">                                    
+                                </i>
+                            </a>                                                                  
+                          </td>
+                        </tr>                          
                         <tr>      
                           <td>1</td>
                           <td>desc</td>
-                          <td>$300.00</td></tr>                         
+                          <td>$300.00</td>
+                          <td>
+                            <span class="quote-detail-id" style="display:none">
+                                3
+                            </span>                                
+                            <a class ="delete_quote_detail"  
+                               title="Eliminar" style="cursor:pointer">
+                                <i class="glyphicon glyphicon-remove">                                    
+                                </i>
+                            </a>                                                                  
+                          </td>
+                        </tr>                          
                     </tbody>                                
                 </table>                                                                      
 
@@ -608,6 +646,7 @@ $(document).ready(function() {
         var o = $(this);
         id = o.parents('td:first').find('span.car-id').text();  
         //alert(id);
+        $('#quote_id').html("0");
         fillQuote(id);
         $('#quote_modal').modal();
     });
@@ -645,9 +684,30 @@ $(document).ready(function() {
         });
     }           
     
+    $('.delete_quote_detail').on('click',function(e){
+        var o = $(this);
+        id = o.parents('td:first').find('span.quote-detail-id').text();     
+        
+        if (!confirm('¿Desea borrar de la cotización?'))
+                return false;
+
+        $.ajax({
+            type: "DELETE",
+            url: '{{ URL::to('/quote') }}' + '/' + id,
+            success: function(data, textStatus, jqXHR) {                        
+                if(data.success == true){}
+                else{alert(data.errors);}                        
+            },
+            dataType: 'json'
+        });                               
+        idQuote = $('#quote_id').text();                          
+        fillQuote(idQuote);        
+        $('#tbl-body').load();         
+    });      
+    
 /*
  |------------------------------------------------------------------------
- | S
+ | Salida
  |------------------------------------------------------------------------
 */     
         

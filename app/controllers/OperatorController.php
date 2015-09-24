@@ -16,41 +16,47 @@ class OperatorController extends BaseController{
 	 
     public function operators_list()
     {
-        $array = array();
+        $array = User::where('type',1)->get();
         return View::make('operators.operators_list',['operators'=>$array]);         
     }         
     
     public function store($operatorId)
     {
-        $input = Input::All();
-        
-        $operator = null;    
+        $input = Input::All();        
+        $operator = null;                 
         
         if($operatorId == 0)
-            $operator = new Member();    
+            $operator = new User();    
         else{
-            $operator = Member::find($operatorId); 
+            $operator = User::find($operatorId); 
             if($operator == null){
                 return Response::json(
-                        array('succes'=>false,'errors'=>'operator not found')
+                        array('success'=>false,'errors'=>'operator not found')
                 );                
             }                
         }        
         
-        $operator->first_name = $input['first_name'];        
-        $operator->last_name = $input['last_name']; 
-        if (isset($input['second_last_name']))
-            $operator->second_last_name = $input['second_last_name'];  
-        $operator->nickname = $input['nickname'];    
+        $operator->first_name = $input['first_name'];                                   
+        $operator->last_name = $input['last_name'];                 
+        if (isset($input['mother_maiden_name']))
+            $operator->mother_maiden_name = $input['mother_maiden_name'];                  
+        $operator->username = $input['username'];                 
+        
+        $operator->password = $input['password'];      
+        $operator->type = 1;// 1 = Ooperator type   
+        $operator->workshop_id = 1;                  
+        
+        try {
+            $operator->town_id = $input['town'];//$input['town'];   
+        } catch (Exception $e) {}        
+        
         $operator->sex = $input['sex'];  
-        if (isset($input['date_birth']))
-            $operator->date_birth = $input['date_birth'];                                       
-        $operator->operator_since = $input['operator_since'];
+        if (isset($input['birthdate']))
+            $operator->birthdate = $input['birthdate'];//'2015-08-22 13:10:35';//          
         if (isset($input['address']))
             $operator->address = $input['address']; 
         if (isset($input['neighborhood']))
-            $operator->neighborhood = $input['neighborhood'];  
-        $operator->town = $input['town'];          
+            $operator->neighborhood = $input['neighborhood'];         
         $operator->city = $input['city'];         
         if (isset($input['postal_code']))
             $operator->postal_code = $input['postal_code'];
@@ -59,15 +65,12 @@ class OperatorController extends BaseController{
         if (isset($input['cell_phone']))        
             $operator->cell_phone = $input['cell_phone'];   
         if (isset($input['email']))        
-            $operator->email = $input['email']; 
-        if (isset($input['company']))        
-            $operator->company = $input['company'];
-        if (isset($input['job']))        
-            $operator->job = $input['job'];                              
+            $operator->email = $input['email'];    
+        
         $operator->save();
-                     
+                                     
         return Response::json(
-                array('succes'=>true)
+                array('success'=>true)
         );
     }
     
@@ -88,7 +91,12 @@ class OperatorController extends BaseController{
     
     public function get($operatorId)
     {
-        $operator = Member::find($operatorId);
+        $operator = User::find($operatorId);
+        
+        try {
+            $operator->town_id = State::find($operator->town_id)->state;//$input['town'];   
+        } catch (Exception $e) {}         
+                
         if( count( $operator) > 0 ){
             
             return Response::json(array(
@@ -98,7 +106,7 @@ class OperatorController extends BaseController{
         }   
         return Response::json(array(
                 'success' => false,
-                'errors' => 'Socio no encontrado'
+                'errors' => 'Opera no encontrado'
         ));        
     }
     
