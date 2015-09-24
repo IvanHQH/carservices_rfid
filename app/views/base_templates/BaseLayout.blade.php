@@ -54,9 +54,8 @@
             </ul>
             <!-- /.navbar-top-links -->    
             <div class="navbar-default sidebar" role="navigation">               
-                <div class="sidebar-nav navbar-collapse">
-                    
-                    <div class="panel panel-default">
+                <div class="sidebar-nav navbar-collapse">                    
+                    <div class="panel panel-info">
                         <div class="panel-heading">
                             Bienvenido
                         </div>           

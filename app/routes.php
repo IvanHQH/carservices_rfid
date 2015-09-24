@@ -30,6 +30,7 @@ Route::post('post_login','MethodsConstantsController@login');
 Route::get('operators_list','OperatorController@operators_list');
 Route::post('operator/{operatorId?}','OperatorController@store');
 Route::get('operator/{operatorId?}','OperatorController@get');
+Route::delete('operator/{operatorId?}','OperatorController@delete');
 
 Route::get('cars_workshop','CarController@cars_workshop_list');
 

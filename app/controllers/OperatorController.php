@@ -76,7 +76,7 @@ class OperatorController extends BaseController{
     
     public function delete($operatorId)
     {
-        $operator = Member::find($operatorId);
+        $operator = User::find($operatorId);
         if( count( $operator) > 0 ){
             $operator->delete();
             return Response::json(array(
